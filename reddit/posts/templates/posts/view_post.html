@@ -1,0 +1,249 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ post.title }} -
+Reddit Clone{% endblock %} {% block content %}
+<div class="post-container">
+  <div class="edit-message">
+    {% for message in messages %}
+    <h4>{{ message }}</h4>
+    {% endfor %}
+  </div>
+  <style>
+    .edit-message {
+      margin-bottom: 1rem;
+    }
+    h4 {
+      color: green;
+    }
+    .comment {
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+    }
+    .replies {
+      margin-left: 2rem;
+      border-left: 2px solid #ccc;
+      padding-left: 1rem;
+    }
+    .reply {
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+    }
+    .reply-link {
+      cursor: pointer;
+      color: #ff4500;
+      text-decoration: underline;
+    }
+  </style>
+  <div class="post-header">
+    <h2>{{ post.title }}</h2>
+    <div class="post-details">
+      <span>Posted by {{ post.author.username }}</span>
+      <span>
+        in
+        <a href="{% url 'subreddits:view_subreddit' post.subreddit.id %}">
+          r/{{ post.subreddit.name }}</a
+        >
+      </span>
+      <span>at {{ post.created_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+  </div>
+  <div class="post-body">
+    <p>{{ post.content }}</p>
+  </div>
+  <div class="post-footer">
+    <button
+      class="vote-btn upvote-btn {% if request.user in post.upvoted_by.all %}upvoted{% endif %}"
+      data-post-id="{{ post.id }}"
+      style="border: none; background: none; cursor: pointer; outline: none"
+    >
+      <i class="bi bi-arrow-up-square"></i>
+    </button>
+    | <span id="vote-count-{{ post.id }}">{{ post.get_vote_count }}</span> |
+    <button
+      class="vote-btn downvote-btn {% if request.user in post.downvoted_by.all %}downvoted{% endif %}"
+      data-post-id="{{ post.id }}"
+      style="border: none; background: none; cursor: pointer; outline: none"
+    >
+      <i class="bi bi-arrow-down-square"></i>
+    </button>
+    {% if user == post.author %}
+    <a href="{% url 'posts:edit_post' post.id %}">Edit</a> |
+    <a href="#" id="delete-post-btn">Delete</a>
+    {% endif %}
+  </div>
+  <br />
+  <br />
+  <br />
+  <div class="make-comment-container">
+    <form method="post" action="{% url 'posts:view_post' post.id %}">
+      {% csrf_token %}
+      <textarea
+        name="content"
+        rows="4"
+        cols="50"
+        id="comment-content"
+        required
+      ></textarea>
+      <button type="submit">Post Comment</button>
+    </form>
+  </div>
+  <div class="comments-container">
+    <h3>Comments</h3>
+    {% for comment in comments %}
+    <div class="comment">
+      <p>
+        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+      </p>
+
+      <a href="#" class="reply-link" data-comment-id="{{ comment.id }}"
+        >Reply to comment</a
+      >
+      <div class="replies">
+        {% include 'partials/replies.html' with replies=comment.replies.all %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Delete Post</h2>
+    <p>Are you sure you want to delete the post "{{ post.title }}"?</p>
+    <form method="post" action="{% url 'posts:delete_post' post.id %}">
+      {% csrf_token %}
+      <button type="submit" class="delete-btn">Delete</button>
+      <button type="button" class="cancel-btn" id="cancel-delete-btn">
+        Cancel
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Reply Modal -->
+<div id="replyModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form id="replyForm" method="post">
+      {% csrf_token %}
+      <textarea name="content" rows="4" cols="50" required></textarea>
+      <input type="hidden" name="parent_comment_id" id="comment-id" />
+      <button type="submit">Post Reply</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  //modal box for delete post
+  let modal = document.getElementById("deleteModal");
+  let btn = document.getElementById("delete-post-btn");
+  let span = document.getElementsByClassName("close")[0];
+  let cancelBtn = document.getElementById("cancel-delete-btn");
+
+  btn.onclick = function () {
+    modal.style.display = "block";
+  };
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  cancelBtn.onclick = function () {
+    modal.style.display = "none";
+  };
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  // modal box for reply to reply
+  document.addEventListener("DOMContentLoaded", function () {
+    let modal = document.getElementById("replyModal");
+    let span = document.getElementsByClassName("close")[0];
+
+    document.querySelectorAll(".reply-link").forEach(function (link) {
+      link.onclick = function (event) {
+        event.preventDefault();
+        let commentId = this.getAttribute("data-comment-id");
+        document.getElementById("comment-id").value = commentId;
+        modal.style.display = "block";
+      };
+    });
+
+    span.onclick = function () {
+      modal.style.display = "none";
+    };
+
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  });
+
+  //upvote and downvote comment
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   // Function to get the CSRF token
+  //   function getCookie(name) {
+  //     let cookieValue = null;
+  //     if (document.cookie && document.cookie !== "") {
+  //       const cookies = document.cookie.split(";");
+  //       for (let i = 0; i < cookies.length; i++) {
+  //         const cookie = cookies[i].trim();
+  //         if (cookie.substring(0, name.length + 1) === name + "=") {
+  //           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     return cookieValue;
+  //   }
+
+  //   const csrftoken = getCookie("csrftoken");
+
+  //   // Upvote comment
+  //   document.querySelectorAll(".upvote-btn").forEach(function (btn) {
+  //     btn.onclick = function () {
+  //       let commentId = this.getAttribute("data-comment-id");
+  //       fetch(`/comments/${commentId}/upvote/`, {
+  //         method: "POST",
+  //         headers: {
+  //           "X-CSRFToken": csrftoken,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({}),
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           document.getElementById(`vote-count-${commentId}`).innerText =
+  //             data.vote_count;
+  //         })
+  //         .catch((error) => console.error("Error:", error));
+  //     };
+  //   });
+
+  //   // Downvote comment
+  //   document.querySelectorAll(".downvote-btn").forEach(function (btn) {
+  //     btn.onclick = function () {
+  //       let commentId = this.getAttribute("data-comment-id");
+  //       fetch(`/comments/${commentId}/downvote/`, {
+  //         method: "POST",
+  //         headers: {
+  //           "X-CSRFToken": csrftoken,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({}),
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           document.getElementById(`vote-count-${commentId}`).innerText =
+  //             data.vote_count;
+  //         })
+  //         .catch((error) => console.error("Error:", error));
+  //     };
+  //   });
+  // });
+</script>
+{% endblock %}

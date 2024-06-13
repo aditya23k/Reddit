@@ -1,0 +1,120 @@
+{% extends 'base.html' %} {% block title %}Profile of {{
+profile_user.user.username }} - Reddit Clone{% endblock %} {% block content %}
+<div class="profile-activity-container">
+  <!-- <h2>{{ profile_user.username }}'s Profile</h2> -->
+  <div class="toggle-buttons">
+    <button id="show-posts" onclick="showPosts()">User Posts</button>
+    <button id="show-comments" onclick="showComments()">User Comments</button>
+  </div>
+  <!-- posts section -->
+  <div id="posts-section">
+    <h3>User Posts</h3>
+    <div class="posts">
+      {% for post in posts %}
+      <div class="post">
+        <h4>
+          <a href="{% url 'posts:view_post' post.id %}">{{ post.title }}</a>
+        </h4>
+        <p>{{ post.content|truncatewords:20 }}</p>
+        <small>Posted on {{ post.created_at|date:"F j, Y, g:i a" }}</small>
+      </div>
+      <hr />
+      {% empty %}
+      <p>No posts yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- comments section -->
+  <div id="comments-section" style="display: none">
+    <h3>User Comments</h3>
+    <div class="comments">
+      {% for comment in comments %}
+      <div class="comment">
+        <p>{{ comment.content }}</p>
+        <small
+          >Commented on {{ comment.created_at|date:"F j, Y, g:i a" }}</small
+        >
+      </div>
+      <hr />
+      {% empty %}
+      <p>No comments yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="profile-about-container">
+  <div class="profile-username-container">
+    <h4>{{ profile_user.username }}</h4>
+  </div>
+  {% if user.is_authenticated and user != profile_user %}
+  <div class="profile-follow-container">
+    {% if is_following %}
+    <form
+      action="{% url 'reddit_users:unfollow_user' profile_user.username %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <button type="submit" class="follow-btn unfollow-btn">Unfollow</button>
+    </form>
+    {% else %}
+    <form
+      action="{% url 'reddit_users:follow_user' profile_user.username %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <button type="submit" class="follow-btn">Follow</button>
+    </form>
+    {% endif %} {% if message in messages %}
+    <p>{{ message }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="profile-karma-container">
+    <div class="comment-karma">
+      <h3>{{ comment_count }}</h3>
+      <small><p>Comment Karma</p></small>
+    </div>
+    <div class="post-karma">
+      <h3>{{ post_count }}</h3>
+      <small><p>Post Karma</p></small>
+    </div>
+    <div class="followers-karma">
+      <h3>{{ follower_count }}</h3>
+      <small><p>Followers</p></small>
+    </div>
+    <div class="following-karma">
+      <h3>{{ following_count }}</h3>
+      <small><p>Following</p></small>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showPosts() {
+    console.log("show posts");
+    let postsSection = document.getElementById("posts-section");
+    let commentsSection = document.getElementById("comments-section");
+
+    if (postsSection && commentsSection) {
+      postsSection.style.display = "block";
+      commentsSection.style.display = "none";
+    } else {
+      console.error("Elements not found");
+    }
+  }
+
+  function showComments() {
+    console.log("show comments");
+    let postsSection = document.getElementById("posts-section");
+    let commentsSection = document.getElementById("comments-section");
+
+    if (postsSection && commentsSection) {
+      postsSection.style.display = "none";
+      commentsSection.style.display = "block";
+    } else {
+      console.error("Elements not found");
+    }
+  }
+</script>
+{% endblock %}

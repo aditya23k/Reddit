@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+<!-- extending the base html format -->
+{% load static %}
+<!-- inheriting the css styling from base.css -->
+{% block title %}Edit Post - Reddit Clone{% endblock %}
+<!-- setting the main content -->
+{% block content %}
+<div class="edit-post-container">
+  <h1>Edit Post</h1>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="{{ post.title }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="content">Content:</label>
+      <textarea id="content" name="content" required>
+{{ post.content }}</textarea
+      >
+    </div>
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

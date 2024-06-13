@@ -1,0 +1,13 @@
+{% for reply in replies %}
+<div class="reply">
+  <p><strong>{{ reply.author.username }}</strong>: {{ reply.content }}</p>
+  <a href="#" class="reply-link" data-comment-id="{{ reply.id }}"
+    >Reply to reply</a
+  >
+  {% if reply.replies.all %}
+  <div class="replies">
+    {% include 'partials/replies.html' with replies=reply.replies.all %}
+  </div>
+  {% endif %}
+</div>
+{% endfor %}
