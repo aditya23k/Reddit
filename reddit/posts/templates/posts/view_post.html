@@ -134,6 +134,44 @@ Reddit Clone{% endblock %} {% block content %}
 </div>
 
 <script>
+  // upvote, downvote post
+  document.querySelectorAll(".vote-btn").forEach((button) => {
+    button.addEventListener("click", function () {
+      const postId = this.getAttribute("data-post-id");
+      const action = this.classList.contains("upvote-btn")
+        ? "upvote"
+        : "downvote";
+      const url = "{% url 'posts:vote_post' %}";
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ post_id: postId, action: action }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById(`vote-count-${postId}`).innerText =
+            data.vote_count;
+          if (action === "upvote") {
+            this.classList.toggle("upvoted");
+            this.classList.remove("downvoted");
+            document
+              .querySelector(`.downvote-btn[data-post-id="${postId}"]`)
+              .classList.remove("downvoted");
+          } else {
+            this.classList.toggle("downvoted");
+            this.classList.remove("upvoted");
+            document
+              .querySelector(`.upvote-btn[data-post-id="${postId}"]`)
+              .classList.remove("upvoted");
+          }
+        });
+    });
+  });
+
   //modal box for delete post
   let modal = document.getElementById("deleteModal");
   let btn = document.getElementById("delete-post-btn");

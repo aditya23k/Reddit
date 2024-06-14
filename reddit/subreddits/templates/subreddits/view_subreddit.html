@@ -76,9 +76,15 @@
           if (action === "upvote") {
             this.classList.toggle("upvoted");
             this.classList.remove("downvoted");
+            document
+              .querySelector(`.downvote-btn[data-post-id="${postId}"]`)
+              .classList.remove("downvoted");
           } else {
             this.classList.toggle("downvoted");
             this.classList.remove("upvoted");
+            document
+              .querySelector(`.upvote-btn[data-post-id="${postId}"]`)
+              .classList.remove("upvoted");
           }
         });
     });

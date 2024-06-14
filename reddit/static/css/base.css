@@ -223,6 +223,22 @@ hr {
   margin: 10px 0;
 }
 
+.vote-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+.upvote-btn.upvoted {
+  color: orange;
+}
+
+.downvote-btn.downvoted {
+  color: navy;
+}
+
 .create-post-container {
   background-color: #fff;
   padding: 20px;
