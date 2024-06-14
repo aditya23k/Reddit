@@ -1,6 +1,12 @@
 {% for reply in replies %}
 <div class="reply">
-  <p><strong>{{ reply.author.username }}</strong>: {{ reply.content }}</p>
+  <small
+    ><a href="{% url 'reddit_users:view_profile' user.username %}"
+      >u/{{ reply.author.username }}</a
+    >
+    | {{ reply.created_at }}</small
+  >
+  <p><{{ reply.content }}</p>
   <a href="#" class="reply-link" data-comment-id="{{ reply.id }}"
     >Reply to reply</a
   >

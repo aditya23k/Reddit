@@ -12,5 +12,7 @@ urlpatterns = [
          views.upvote_comment, name='upvote_comment'),
     path('comment/<int:comment_id>/downvote/',
          views.downvote_comment, name='downvote_comment'),
+    path('edit/<int:comment_id>/', views.edit_comment, name='edit_comment'),
+    path('delete/<int:comment_id>/', views.delete_comment, name='delete_comment'),
 
 ]

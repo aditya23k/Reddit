@@ -32,6 +32,12 @@ profile_user.user.username }} - Reddit Clone{% endblock %} {% block content %}
       <div class="comment">
         <p>{{ comment.content }}</p>
         <small
+          >On post:
+          <a href="{% url 'posts:view_post' comment.post.id %}"
+            >{{ comment.post.title }}</a
+          ></small
+        >
+        <small
           >Commented on {{ comment.created_at|date:"F j, Y, g:i a" }}</small
         >
       </div>

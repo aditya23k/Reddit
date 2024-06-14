@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Post
 from comments.models import Comment
+from comments.forms import CommentForm
 from subreddits.models import Subreddit
 from django.http import JsonResponse
 # Create your views here.
@@ -39,6 +40,22 @@ def view_post(request, post_id):
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
 
+            # to edit or delete comment
+        if 'edit_comment_id' in request.POST:
+            comment_id = request.POST['edit_comment_id']
+            comment = get_object_or_404(Comment, id=comment_id)
+            if request.user == comment.author:
+                form = CommentForm(request.POST, instance=comment)
+                if form.is_valid():
+                    form.save()
+                    return redirect('posts:view_post', post_id=post.id)
+        elif 'delete_comment_id' in request.POST:
+            comment_id = request.POST['delete_comment_id']
+            comment = get_object_or_404(Comment, id=comment_id)
+            if request.user == comment.author:
+                comment.delete()
+                return redirect('posts:view_post', post_id=post.id)
+                # edit or delete comment section ends here
         if content:
             Comment.objects.create(
                 post=post,
