@@ -120,12 +120,46 @@ main {
   background-color: #fff;
 }
 
-main .about-subreddit {
+.main-side-container {
+  border-left: 1px solid #ccc;
+  padding-left: 20px;
+}
+
+.about-subreddit {
   padding: 20px;
-  border: 1px solid #ccc; /* Add a border */
-  background-color: #f5f5f5; /* Slightly different background color */
+  /* border: 1px solid #ccc; */
+  border-left: 1px solid #ccc;
+  background-color: transparent;
   border-radius: 5px;
-  margin-top: 20px; /* Add some margin for better spacing */
+  margin-top: 20px;
+}
+
+.about-subreddit h1 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+}
+
+.about-subreddit p {
+  margin-top: 30px;
+  font-size: 1.1em;
+  margin-bottom: 20px;
+}
+
+.about-subreddit .subreddit-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #1a1a8d; /* Dark blue color */
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.about-subreddit .subreddit-btn:hover {
+  background-color: #000066; /* Darker blue on hover */
 }
 
 .custom-btn {
@@ -195,8 +229,6 @@ hr {
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  max-width: 600px;
-  margin: auto;
 }
 
 .create-post-container h1 {

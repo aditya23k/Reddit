@@ -45,10 +45,12 @@
 </div>
 <div class="about-subreddit">
   <h1>{{ subreddit.name }}</h1>
-  <p>{{ subreddit.description }}</p>
-  <a href="{% url 'posts:create_post' %}?subreddit={{ subreddit.id }}"
+  <a
+    href="{% url 'posts:create_post' %}?subreddit={{ subreddit.id }}"
+    class="subreddit-btn"
     >Create Post</a
   >
+  <p>{{ subreddit.description }}</p>
 </div>
 <script>
   document.querySelectorAll(".vote-btn").forEach((button) => {
