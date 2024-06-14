@@ -1,3 +1,8 @@
+* {
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #dae0e6;
@@ -12,6 +17,66 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 30px;
+}
+/* Base styles for the search bar */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.search-bar form {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 30px;
+  border: 2px solid #fff;
+  overflow: hidden;
+}
+
+.search-bar input[type="text"] {
+  width: 15rem;
+  height: 1.5rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px 0 0 25px;
+  outline: none;
+  font-size: 16px;
+  background-color: #f5f5f5;
+}
+
+.search-bar input[type="text"]::placeholder {
+  color: #888;
+}
+
+.search-bar button {
+  background-color: #ff4500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 25px 25px 0;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+  background-color: #e03d00;
+}
+
+.search-bar button i {
+  margin-right: 5px;
 }
 
 nav a {
@@ -31,6 +96,22 @@ aside {
   background-color: #fff;
   margin-right: 20px;
 }
+.subreddit-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: blue;
+  background-color: #fff; /* Dark blue color */
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.subreddit-btn:hover {
+  background-color: #ff4500; /* Darker blue on hover */
+}
 
 main {
   display: grid;
@@ -47,16 +128,34 @@ main .about-subreddit {
   margin-top: 20px; /* Add some margin for better spacing */
 }
 
+.custom-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #1a1a8d; /* Dark blue color */
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #000066; /* Darker blue on hover */
+}
+
 .posts {
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   background-color: #fff;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
 }
 
 .post {
-  padding: 10px;
+  padding: 10px 0 10px 0;
   border-bottom: 1px solid #ccc;
 }
 

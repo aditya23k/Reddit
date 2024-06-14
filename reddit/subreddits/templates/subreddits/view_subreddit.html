@@ -5,11 +5,16 @@
   <div class="posts">
     {% for post in posts %}
     <div class="post">
+      <small
+        ><a href="{% url 'reddit_users:view_profile' user.username %}"
+          >u/{{ post.author.username }}</a
+        >
+        | {{ post.created_at }}</small
+      >
       <h3 class="post-title">
         <a href="{% url 'posts:view_post' post.id %}">{{ post.title }}</a>
       </h3>
       <p>{{ post.content }}</p>
-      <small>By {{ post.author.username }} on {{ post.created_at }}</small>
       <div class="post-footer">
         <button
           class="vote-btn upvote-btn {% if request.user in post.upvoted_by.all %}upvoted{% endif %}"
@@ -26,6 +31,10 @@
         >
           <i class="bi bi-arrow-down-square"></i>
         </button>
+        |
+        <a href="{% url 'posts:view_post' post.id %}">
+          {{ post.comments.count }} comments
+        </a>
       </div>
     </div>
     {% endfor %}

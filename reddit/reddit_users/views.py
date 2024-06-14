@@ -7,6 +7,10 @@ from .models import RedditUser
 from posts.models import Post
 from comments.models import Comment
 from follow.models import Follow
+from subreddits.models import Subreddit
+from django.http import JsonResponse
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -133,3 +137,22 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('reddit_users:index')
+
+
+def search(request):
+    query = request.GET.get('query')
+
+    subreddits = Subreddit.objects.filter(name__icontains=query)
+    users = User.objects.filter(username__icontains=query)
+    posts = Post.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query))
+    # print(f"Subreddits: {subreddits}")
+    # print(f"Users: {users}")
+    # print(f"Posts: {posts}")
+    results = {
+        'subreddits': [{'id': subreddit.id, 'name': subreddit.name} for subreddit in subreddits],
+        'users': [{'username': user.username} for user in users],
+        'posts': [{'id': post.id, 'title': post.title, 'author': post.author.username} for post in posts]
+    }
+    print(results)
+    return JsonResponse(results)

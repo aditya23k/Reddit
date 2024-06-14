@@ -5,9 +5,21 @@
   <div class="posts">
     {% for post in posts %}
     <div class="post">
-      <h2 class="subreddit-title">r/{{ post.subreddit.name }}</h2>
-      <small>Posted by u/{{ post.author.username }} at</small>
-      <small>{{ post.created_at|date:"F j, Y, g:i a" }}</small>
+      <small>
+        <h2 class="subreddit-title">
+          <a
+            href="{% url 'subreddits:view_subreddit' post.subreddit.id %}"
+            style="color: #ff4500"
+            >r/{{ post.subreddit.name }}</a
+          >
+        </h2>
+      </small>
+      <small
+        ><a href="{% url 'reddit_users:view_profile' user.username %}"
+          >u/{{ post.author.username }}</a
+        >
+        | {{ post.created_at }}</small
+      >
       <h3 class="post-title">
         <a href="{% url 'posts:view_post' post.id %}">{{ post.title }}</a>
       </h3>
@@ -28,6 +40,10 @@
         >
           <i class="bi bi-arrow-down-square"></i>
         </button>
+        |
+        <a href="{% url 'posts:view_post' post.id %}">
+          {{ post.comments.count }} comments
+        </a>
       </div>
     </div>
     {% endfor %}
@@ -36,13 +52,17 @@
   <p>No posts yet.</p>
   {% endif %}
 </div>
-{% if user.is_authenticated %}
-<h1>Welcome to Reddit, {{user.username}}</h1>
-<br />
-<a href="{% url 'subreddits:create_subreddit' %}">Create Subreddit</a>
-{% else %}
-<h1>Welcome to Reddit</h1>
-{% endif %}
+<div class="main-side-container">
+  {% if user.is_authenticated %}
+  <h3>Welcome to Reddit, {{user.username}}</h3>
+  <br />
+  <a href="{% url 'subreddits:create_subreddit' %}" class="custom-btn"
+    >Create Subreddit +</a
+  >
+  {% else %}
+  <h1>Welcome to Reddit</h1>
+  {% endif %}
+</div>
 <br />
 <script>
   document.querySelectorAll(".vote-btn").forEach((button) => {
