@@ -6,7 +6,7 @@
     {% for post in posts %}
     <div class="post">
       <small
-        ><a href="{% url 'reddit_users:view_profile' user.username %}"
+        ><a href="{% url 'reddit_users:view_profile' post.author.username %}"
           >u/{{ post.author.username }}</a
         >
         | {{ post.created_at }}</small

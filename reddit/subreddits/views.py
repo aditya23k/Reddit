@@ -24,7 +24,7 @@ def create_subreddit(request):
                 name=name, description=description, creator=request.user)
             subreddit.save()
             messages.info(request, 'Subreddit created')
-            return redirect('index')
+            return redirect('reddit_users:index')
 
     else:
         return render(request, 'subreddits/create_subreddit.html')

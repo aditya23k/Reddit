@@ -56,7 +56,7 @@ def view_profile(request, username):
     })
 
 
-@login_required(login_url='login')
+@login_required(login_url='/login/')
 def follow_user(request, username):
     user_to_follow = get_object_or_404(User, username=username)
     follow, created = Follow.objects.get_or_create(
@@ -70,7 +70,7 @@ def follow_user(request, username):
     return redirect('reddit_users:view_profile', username=username)
 
 
-@login_required(login_url='login')
+@login_required(login_url='/login/')
 def unfollow_user(request, username):
     user_to_unfollow = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(
@@ -133,7 +133,7 @@ def login(request):
         return render(request, 'reddit_users/login.html')
 
 
-@login_required(login_url='login')
+@login_required(login_url='/login/')
 def logout(request):
     auth.logout(request)
     return redirect('reddit_users:index')

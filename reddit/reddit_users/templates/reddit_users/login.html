@@ -14,7 +14,7 @@
   </head>
   <body>
     <div class="login-container">
-      <h1>Login</h1>
+      <h1>Log in to Reddit</h1>
       <div class="login-error-msg">
         {% for message in messages %}
         <h4>{{ message }}</h4>
@@ -29,8 +29,11 @@
           placeholder="Password"
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">Log In</button>
       </form>
+      <div class="signup-link">
+        <p>New to Reddit? <a href="/signup">Sign Up</a></p>
+      </div>
     </div>
   </body>
 </html>

@@ -35,14 +35,18 @@ Reddit Clone{% endblock %} {% block content %}
   <div class="post-header">
     <h2>{{ post.title }}</h2>
     <div class="post-details">
-      <span>Posted by {{ post.author.username }}</span>
+      <small
+        ><a href="{% url 'reddit_users:view_profile' post.author.username %}"
+          >u/{{ post.author.username }}</a
+        >
+        | {{ post.created_at }}</small
+      >
       <span>
         in
         <a href="{% url 'subreddits:view_subreddit' post.subreddit.id %}">
           r/{{ post.subreddit.name }}</a
         >
       </span>
-      <span>at {{ post.created_at|date:"F j, Y, g:i a" }}</span>
     </div>
   </div>
   <div class="post-body">
